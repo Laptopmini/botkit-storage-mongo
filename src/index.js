@@ -21,7 +21,11 @@ module.exports = function(config) {
     var db = monk(config.mongoUri, config.mongoOptions);
 
     db.catch(function(err) {
-        throw new Error(err);
+        if (config.onConnectionFailure) {
+            config.onConnectionFailure(err);
+        } else {
+            console.error(err);
+        }
     });
 
     var storage = {};
